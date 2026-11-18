@@ -154,7 +154,7 @@ h1 span { color: var(--mint); }
 .map-list-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 16px 2px 9px; }
 .map-list-heading strong { color: #263d32; font-size: 12px; }
 .map-list-heading span { color: #859088; font-size: 9px; }
-.district-list { display: grid; gap: 6px; }
+.district-list { display: grid; gap: 6px; max-height: 420px; overflow-y: auto; padding-right: 3px; }
 .district-row { grid-template-columns: 79px 1fr 54px; gap: 8px; padding: 7px 8px; border-color: rgba(33,65,48,.08); border-radius: 9px; color: #2c3f35; background: rgba(255,255,255,.52); }
 .district-row:hover, .district-row:focus-visible, .district-row[aria-pressed="true"] { border-color: rgba(61,123,85,.38); background: #fff; }
 .district-name { color: #34483d; font-size: 10px; }

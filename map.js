@@ -8,6 +8,9 @@
   const status = document.querySelector("#map-status");
   const selection = document.querySelector("#map-selection");
   const reset = document.querySelector("#map-reset");
+  const districtDetail = document.querySelector("#district-detail");
+  const shownTotal = document.querySelector("#shown-total");
+  const roster = window.DESHAO_DATA;
   const fullTainan = L.latLngBounds([[22.88, 119.98], [23.42, 120.66]]);
   let districtLayer;
   let selectedFeature;
@@ -24,6 +27,9 @@
     const p = feature.properties || {};
     return p.TOWNNAME || p.TOWNID || p.name || p.NAME || "臺南市行政區";
   };
+
+  const normalizeDistrict = (name) => name.replace(/^臺南市/, "").replace(/區$/, "");
+  const findCarePoint = (name) => roster.carePointDistribution.find((item) => item.district === normalizeDistrict(name));
 
   const query = new URLSearchParams({
     where: "1=1",
@@ -54,14 +60,23 @@
             click() {
               selectedFeature = feature;
               districtLayer.setStyle(styleFor);
+              const carePoint = findCarePoint(name);
               const popup = document.createElement("div");
               const title = document.createElement("strong");
               const note = document.createElement("div");
-              title.textContent = name;
-              note.textContent = "此為臺南市行政區界。得少概況目前按召會大區彙總，未套配行政區人數。";
-              popup.append(title, note);
+              const groups = document.createElement("div");
+              title.textContent = `${name}｜${carePoint?.count || 0} 位`;
+              note.textContent = carePoint ? "名冊關懷據點人數，非居住地人數。" : "目前名冊沒有記錄在此行政區的關懷據點。";
+              groups.textContent = carePoint ? carePoint.groups.map((group) => `${group.name} ${group.count} 位`).join("・") : "";
+              popup.append(title, note, groups);
               layer.bindPopup(popup).openPopup();
-              selection.textContent = `${name}｜行政區範圍已選取。得少人數仍按召會大區統計。`;
+              shownTotal.textContent = carePoint?.count || 0;
+              document.querySelectorAll("#district-list .district-row").forEach((button) => button.setAttribute("aria-pressed", "false"));
+              districtDetail.textContent = carePoint
+                ? `${name}關懷據點：${carePoint.count} 位；${groups.textContent}`
+                : `${name}：目前名冊沒有關懷據點記錄。`;
+              districtDetail.classList.toggle("is-selected", Boolean(carePoint));
+              selection.textContent = `${name}｜關懷據點名冊 ${carePoint?.count || 0} 位；不是居住地分布。`;
             }
           });
         }
@@ -81,6 +96,10 @@
     if (districtLayer) districtLayer.setStyle(styleFor);
     map.closePopup();
     map.fitBounds(fullTainan, { padding: [22, 22] });
-    selection.textContent = "已回到臺南全市範圍；地圖點選行政區只顯示區名。";
+    shownTotal.textContent = roster.total;
+    document.querySelectorAll("#district-list .district-row").forEach((button) => button.setAttribute("aria-pressed", "false"));
+    districtDetail.textContent = "已回到全市名單；點選地圖行政區查看關懷據點名冊人數。";
+    districtDetail.classList.remove("is-selected");
+    selection.textContent = "已回到臺南全市範圍；點選行政區查看關懷據點名冊人數。";
   });
 })();
