@@ -5,11 +5,6 @@
   const map = L.map(mapNode, { zoomControl: true, scrollWheelZoom: true, minZoom: 8, maxZoom: 18 })
     .setView([23.16, 120.31], 9.65);
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
   const status = document.querySelector("#map-status");
   const selection = document.querySelector("#map-selection");
   const reset = document.querySelector("#map-reset");
@@ -18,11 +13,11 @@
   let selectedFeature;
 
   const styleFor = (feature) => ({
-    color: selectedFeature === feature ? "#d8903f" : "#4b8566",
-    weight: selectedFeature === feature ? 2.7 : 1.15,
+    color: selectedFeature === feature ? "#f0b65f" : "#e7e7dc",
+    weight: selectedFeature === feature ? 2.4 : 1.25,
     opacity: 0.95,
-    fillColor: selectedFeature === feature ? "#e5ad68" : "#79b58f",
-    fillOpacity: selectedFeature === feature ? 0.42 : 0.18
+    fillColor: selectedFeature === feature ? "#d9983f" : "#687c62",
+    fillOpacity: selectedFeature === feature ? 0.78 : 0.7
   });
 
   const displayDistrict = (feature) => {
@@ -54,7 +49,7 @@
           const name = displayDistrict(feature);
           layer.bindTooltip(name, { sticky: true, direction: "top", className: "district-tooltip" });
           layer.on({
-            mouseover() { if (selectedFeature !== feature) layer.setStyle({ weight: 2, fillOpacity: 0.3 }); },
+            mouseover() { if (selectedFeature !== feature) layer.setStyle({ weight: 1.9, fillOpacity: 0.84 }); },
             mouseout() { districtLayer.resetStyle(layer); },
             click() {
               selectedFeature = feature;

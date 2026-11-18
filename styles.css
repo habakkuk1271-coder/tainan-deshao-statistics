@@ -129,15 +129,14 @@ h1 span { color: var(--mint); }
 .official-map-link { border-color: rgba(223,170,93,.27); color: #edc98d; background: rgba(223,170,93,.07); transition: background .18s ease, border-color .18s ease; }
 .official-map-link:hover, .official-map-link:focus-visible { background: rgba(223,170,93,.14); border-color: rgba(223,170,93,.55); outline: none; }
 .map-note { max-width: 900px; margin-bottom: 14px; }
-.map-layout { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(290px,.72fr); min-height: 580px; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: #d7e0d8; }
-.map-stage { position: relative; min-width: 0; min-height: 580px; background: #e4e8df; }
-#tainan-map { position: absolute; inset: 0; min-height: 580px; background: #e7e9df; }
-.leaflet-container { background: #e7e9df; font-family: inherit; }
-.leaflet-control-attribution { font-size: 9px !important; }
+.map-layout { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(290px,.72fr); min-height: 580px; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: #171b1c; }
+.map-stage { position: relative; min-width: 0; min-height: 580px; background: #171b1c; }
+#tainan-map { position: absolute; inset: 0; min-height: 580px; background: #171b1c; }
+.leaflet-container { background: #171b1c; font-family: inherit; }
 .leaflet-control-zoom a { color: #293b35 !important; }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #172320; color: #edf1e9; box-shadow: 0 8px 26px rgba(0,0,0,.2); }
 .leaflet-popup-content { margin: 10px 13px; font: inherit; font-size: 12px; font-weight: 600; line-height: 1.5; }
-.map-legend { position: absolute; z-index: 500; left: 14px; bottom: 15px; display: flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid rgba(25,43,37,.12); border-radius: 9px; color: #31463d; background: rgba(248,249,242,.92); font-size: 10px; box-shadow: 0 4px 14px rgba(22,35,29,.12); }
+.map-legend { display: none; }
 .legend-swatch { width: 12px; height: 12px; border: 1.5px solid #518c70; border-radius: 3px; background: rgba(111,175,137,.21); }
 .map-status { position: absolute; z-index: 500; top: 12px; left: 50%; max-width: calc(100% - 100px); transform: translateX(-50%); padding: 8px 11px; border: 1px solid rgba(25,43,37,.12); border-radius: 999px; color: #385044; background: rgba(248,249,242,.92); font-size: 10px; box-shadow: 0 4px 14px rgba(22,35,29,.1); white-space: nowrap; }
 .map-status.is-error { color: #7d4d2a; border-color: rgba(166,100,48,.23); background: rgba(255,247,232,.96); white-space: normal; text-align: center; }
