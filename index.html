@@ -57,10 +57,11 @@
               <p class="eyebrow">CURRENT DISTRIBUTION</p>
               <h2>照顧區分布</h2>
             </div>
-            <span class="count-pill"><span id="shown-total">—</span> 位</span>
+          <span class="count-pill"><span id="shown-total">—</span> 位</span>
           </div>
           <p class="section-note">依名單中的所屬大區彙整。小樣本區合併呈現；目前先以分區清單呈現，取得正式區界後再加入互動地圖。</p>
           <div id="district-list" class="district-list" aria-live="polite"></div>
+          <div id="district-detail" class="selection-detail" aria-live="polite">點選任一大區，可查看該區人數與占目前名單比例。</div>
           <p class="privacy-note"><span aria-hidden="true">◈</span> 本頁只載入彙總數字，不包含得少姓名、照顧者姓名或聯絡資料。</p>
         </section>
 
@@ -91,8 +92,9 @@
           <div class="history-total"><span>各期名冊人數加總</span><strong id="period-sum">—</strong></div>
         </div>
         <p class="section-note">各期人數是當期名冊人數，跨期可能有重複，不代表歷年不重複總人數。</p>
-        <div id="history-chart" class="history-chart" role="img" aria-label="歷年名冊人數長條圖"></div>
+        <div id="history-chart" class="history-chart" role="group" aria-label="歷年名冊人數長條圖"></div>
         <div id="history-table" class="history-table"></div>
+        <div id="history-detail" class="selection-detail" aria-live="polite">點選長條或下方期別，可查看該期人數及與前一期的差異。</div>
       </section>
 
       <footer class="page-footer">
