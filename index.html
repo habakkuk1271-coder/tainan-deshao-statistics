@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101b1c" />
+    <meta name="description" content="台南得少統計互動儀表板" />
+    <title>台南得少統計</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="台南得少統計首頁">
+        <span class="brand-mark" aria-hidden="true">得</span>
+        <span>台南得少統計</span>
+      </a>
+      <span class="source-stamp" id="source-stamp"></span>
+    </header>
+
+    <main id="top" class="page-shell">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">得榮少年教育專案</p>
+          <h1>看見分布，<span>掌握近況</span></h1>
+          <p class="intro-copy">依照顧區整理目前名單與歷年人數，逐步接上出席資料。</p>
+        </div>
+        <div class="freshness"><span class="live-dot"></span><span>目前名單</span><strong id="latest-period"></strong></div>
+      </section>
+
+      <section class="kpi-grid" aria-label="目前摘要">
+        <article class="kpi-card featured">
+          <span class="kpi-label">目前名單</span>
+          <div class="kpi-value"><strong id="current-total">—</strong><span>位</span></div>
+          <span class="kpi-foot">依最新總名單統計</span>
+        </article>
+        <article class="kpi-card">
+          <span class="kpi-label">國小階段</span>
+          <div class="kpi-value"><strong id="elementary-total">—</strong><span>位</span></div>
+          <span class="kpi-foot">小五、小六</span>
+        </article>
+        <article class="kpi-card">
+          <span class="kpi-label">國高中階段</span>
+          <div class="kpi-value"><strong id="secondary-total">—</strong><span>位</span></div>
+          <span class="kpi-foot">國中與高中年級</span>
+        </article>
+        <article class="kpi-card">
+          <span class="kpi-label">已受浸</span>
+          <div class="kpi-value"><strong id="baptized-total">—</strong><span>位</span></div>
+          <span class="kpi-foot">依名單欄位統計</span>
+        </article>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel distribution-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">CURRENT DISTRIBUTION</p>
+              <h2>照顧區分布</h2>
+            </div>
+            <span class="count-pill"><span id="shown-total">—</span> 位</span>
+          </div>
+          <p class="section-note">依名單中的所屬大區彙整。小樣本區合併呈現；目前先以分區清單呈現，取得正式區界後再加入互動地圖。</p>
+          <div id="district-list" class="district-list" aria-live="polite"></div>
+          <p class="privacy-note"><span aria-hidden="true">◈</span> 本頁只載入彙總數字，不包含得少姓名、照顧者姓名或聯絡資料。</p>
+        </section>
+
+        <section class="panel attendance-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ATTENDANCE</p>
+              <h2>出席概況</h2>
+            </div>
+            <span class="pending-pill">資料待串接</span>
+          </div>
+          <p class="section-note">接入出席資料後，這裡會呈現主日、小排與家聚會的近況，並可依期間切換。</p>
+          <div class="attendance-placeholder">
+            <div class="pulse-ring"><span>＋</span></div>
+            <strong>下一步：接上出席資料</strong>
+            <span>未匯入資料前不顯示推估或空白人數。</span>
+          </div>
+          <div class="mini-tags"><span>主日</span><span>小排</span><span>家聚會</span></div>
+        </section>
+      </div>
+
+      <section class="panel history-panel">
+        <div class="section-heading history-heading">
+          <div>
+            <p class="eyebrow">HISTORICAL ROSTERS</p>
+            <h2>歷年名冊人數</h2>
+          </div>
+          <div class="history-total"><span>各期名冊人數加總</span><strong id="period-sum">—</strong></div>
+        </div>
+        <p class="section-note">各期人數是當期名冊人數，跨期可能有重複，不代表歷年不重複總人數。</p>
+        <div id="history-chart" class="history-chart" role="img" aria-label="歷年名冊人數長條圖"></div>
+        <div id="history-table" class="history-table"></div>
+      </section>
+
+      <footer class="page-footer">
+        <span>資料來源：台南得榮少年總名單（重要）</span>
+        <span>只呈現彙總統計；不代表實際住址或個人位置</span>
+      </footer>
+    </main>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
