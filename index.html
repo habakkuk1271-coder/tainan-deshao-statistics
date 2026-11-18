@@ -6,7 +6,8 @@
     <meta name="theme-color" content="#101b1c" />
     <meta name="description" content="台南得少統計互動儀表板" />
     <title>台南得少統計</title>
-    <link rel="stylesheet" href="styles.css?v=20261118-interaction" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="styles.css?v=20261118-map" />
   </head>
   <body>
     <header class="topbar">
@@ -22,7 +23,7 @@
         <div>
           <p class="eyebrow">得榮少年教育專案</p>
           <h1>看見分布，<span>掌握近況</span></h1>
-          <p class="intro-copy">依照顧區整理目前名單與歷年人數，逐步接上出席資料。</p>
+          <p class="intro-copy">以實際行政區向量圖為底圖，整合目前得少概況與歷年名冊統計。</p>
         </div>
         <div class="freshness"><span class="live-dot"></span><span>目前名單</span><strong id="latest-period"></strong></div>
       </section>
@@ -50,21 +51,40 @@
         </article>
       </section>
 
-      <div class="content-grid">
-        <section class="panel distribution-panel">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">CURRENT DISTRIBUTION</p>
-              <h2>照顧區分布</h2>
-            </div>
-          <span class="count-pill"><span id="shown-total">—</span> 位</span>
+      <section class="panel map-panel" aria-label="台南互動地圖與得少概況">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">TAIWAN · TAINAN</p>
+            <h2>得少概況地圖</h2>
           </div>
-          <p class="section-note">依名單中的所屬大區彙整。小樣本區合併呈現；目前先以分區清單呈現，取得正式區界後再加入互動地圖。</p>
-          <div id="district-list" class="district-list" aria-live="polite"></div>
-          <div id="district-detail" class="selection-detail" aria-live="polite">點選任一大區，可查看該區人數與占目前名單比例。</div>
-          <p class="privacy-note"><span aria-hidden="true">◈</span> 本頁只載入彙總數字，不包含得少姓名、照顧者姓名或聯絡資料。</p>
-        </section>
+          <div class="map-actions">
+            <span class="map-source-pill"><span class="source-dot"></span>臺南行政區界向量</span>
+            <a class="official-map-link" href="https://landmap.tainan.gov.tw/gis/" target="_blank" rel="noopener">官方地籍圖台 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <p class="section-note map-note">地圖使用台南市行政區 polygon 向量資料；目前名單按召會大區統計。兩種區界口徑不同，所以不把大區人數套到行政區地圖上。</p>
+        <div class="map-layout">
+          <div class="map-stage">
+            <div id="tainan-map" role="application" aria-label="可縮放與點選的臺南市行政區地圖"></div>
+            <div class="map-legend"><span class="legend-swatch"></span>臺南市行政區界</div>
+            <div id="map-status" class="map-status" role="status">正在載入區界向量…</div>
+            <button class="map-reset" id="map-reset" type="button" aria-label="回到台南全市">⌖<span>全市</span></button>
+          </div>
+          <aside class="map-sidebar">
+            <div class="map-total-card">
+              <span>目前名單</span>
+              <strong><span id="shown-total">—</span><small>／110 位</small></strong>
+              <p id="district-detail" class="selection-detail" aria-live="polite">下方點選大區可查看人數；地圖點選行政區只顯示區名。</p>
+            </div>
+            <div class="map-list-heading"><strong>照顧區人數</strong><span>按召會大區彙總</span></div>
+            <div id="district-list" class="district-list" aria-live="polite"></div>
+            <p class="privacy-note"><span aria-hidden="true">◈</span> 只呈現彙總數字，不標示個人住址或位置；小樣本大區合併呈現。</p>
+          </aside>
+        </div>
+        <div class="map-footer"><span id="map-selection">點選地圖上的行政區查看名稱；拖曳或縮放瀏覽。</span><span>區界向量來源：<a href="https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0" target="_blank" rel="noopener">臺南市區界圖圖徵服務</a> · <a href="https://data.gov.tw/dataset/98813" target="_blank" rel="noopener">市府區域圖資料集</a></span></div>
+      </section>
 
+      <div class="content-grid single-column">
         <section class="panel attendance-panel">
           <div class="section-heading">
             <div>
@@ -102,7 +122,9 @@
         <span>只呈現彙總統計；不代表實際住址或個人位置</span>
       </footer>
     </main>
-    <script src="data.js?v=20261118-interaction"></script>
-    <script src="app.js?v=20261118-interaction"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="data.js?v=20261118-map"></script>
+    <script src="app.js?v=20261118-map"></script>
+    <script src="map.js?v=20261118-map"></script>
   </body>
 </html>
