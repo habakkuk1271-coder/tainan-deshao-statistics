@@ -52,7 +52,7 @@
       const names = data.namesByGroup?.[id] || [];
       const statsLine = stats ? `<span class="selected-group-meta">${stats.villages} 里・${Number(stats.households).toLocaleString("zh-TW")} 戶</span>` : "";
       const namesList = names.length
-        ? `<ul class="selected-name-list">${names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul>`
+        ? `<div class="selected-name-area"><span class="selected-name-label">得少姓名（${names.length} 位）</span><ul class="selected-name-list">${names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul></div>`
         : `<span class="selected-group-empty">目前名單無得少</span>`;
       return `<section class="selected-group"><h3 class="selected-group-title"><span>${escapeHtml(row.name)}${row.grouped ? "（合併區）" : ""}</span><small>${row.count} 位</small></h3>${statsLine}${namesList}</section>`;
     }).join("");
