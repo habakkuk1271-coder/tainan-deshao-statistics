@@ -2,7 +2,7 @@
   const mapNode = document.querySelector("#tainan-map");
   if (!mapNode || !window.L) return;
 
-  const map = L.map(mapNode, { zoomControl: true, scrollWheelZoom: true, minZoom: 8, maxZoom: 18 });
+  const map = L.map(mapNode, { zoomControl: true, scrollWheelZoom: true, attributionControl: false, minZoom: 8, maxZoom: 18 });
   const status = document.querySelector("#map-status");
   const selection = document.querySelector("#map-selection");
   const reset = document.querySelector("#map-reset");
@@ -56,47 +56,25 @@
     const linked = groups.filter((group) => group.districts.some((name) => normalizeDistrict(name) === district));
     const selectedGroup = groups.find((group) => group.id === selectedId);
     const active = selectedGroup && selectedGroup.roads.length === 0 && linked.some((group) => group.id === selectedId);
-    return {
-      color: active ? groupColor(selectedId) : "#8e9a96",
-      weight: active ? 2.7 : 0.9,
-      opacity: active ? 0.95 : 0.5,
-      fillColor: active ? groupColor(selectedId) : "#71847d",
-      fillOpacity: active ? 0.24 : 0.035
-    };
+    return { color: active ? groupColor(selectedId) : "#506067", weight: active ? 2.6 : 0.8, opacity: active ? 0.95 : 0.52, fill: false, fillOpacity: 0 };
   };
 
   const roadStyle = (feature) => {
     const ids = feature.properties?.groups || [];
     const active = selectedId && ids.includes(selectedId);
-    const color = active ? groupColor(selectedId) : groupColor(ids[0] || "01");
-    return {
-      color,
-      weight: active ? 4.5 : selectedId ? 1.1 : 1.3,
-      opacity: active ? 0.96 : selectedId ? 0.12 : 0.28,
-      lineCap: "round",
-      lineJoin: "round"
-    };
+    return { color: active ? groupColor(selectedId) : "#829099", weight: active ? 3.6 : selectedId ? 0.85 : 1.15, opacity: active ? 0.96 : selectedId ? 0.18 : 0.58, lineCap: "round", lineJoin: "round" };
   };
 
   const displayRoadPopup = (feature, layer) => {
-    const p = feature.properties || {};
-    const ids = p.groups || [];
-    const title = document.createElement("strong");
-    title.textContent = p.name || "實際道路分界";
-    const subtitle = document.createElement("div");
-    subtitle.textContent = p.kind === "waterway" ? "圖資中的河川線" : "OpenStreetMap 道路中心線";
-    const list = document.createElement("div");
-    list.className = "road-group-list";
-    list.textContent = ids.map((id) => `${groupName(id)} ${groupCount(id)} 位`).join("　·　");
+    const ids = feature.properties?.groups || [];
     const content = document.createElement("div");
-    content.append(title, subtitle, list);
-    layer.bindPopup(content, { maxWidth: 360 });
+    content.textContent = ids.map((id) => `${groupName(id)}：${groupCount(id)} 位`).join("　·　") || "區域界線";
+    layer.bindPopup(content, { maxWidth: 280 });
     layer.on("click", () => {
       if (ids.length === 1) window.selectDeshaoGroup?.(ids[0], true);
       map.closePopup();
       layer.openPopup();
     });
-    layer.bindTooltip(p.name || "道路分界", { sticky: true, className: "road-tooltip" });
   };
 
   const selectGroupOnMap = (id, fit = true) => {
@@ -138,10 +116,6 @@
     updateDetails("");
   };
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
-  }).addTo(map);
   map.fitBounds(fullTainan, { padding: [28, 28] });
 
   const districtQuery = new URLSearchParams({
@@ -165,19 +139,13 @@
         style: adminStyle,
         onEachFeature(feature, layer) {
           const name = displayDistrict(feature);
-          layer.bindTooltip(name, { sticky: true, className: "district-tooltip" });
           layer.on("click", () => {
             const district = normalizeDistrict(name);
             const linked = groups.filter((group) => group.districts.some((name) => normalizeDistrict(name) === district));
-            const lines = linked.map((group) => `${groupName(group.id)}　${groupCount(group.id)} 位`).join("<br>");
-            const title = document.createElement("strong");
-            title.textContent = name;
-            const note = document.createElement("div");
-            note.textContent = linked.length ? "此行政區涵蓋下列大區範圍；人數是大區總數。" : "目前大區資料未列入此行政區。";
-            const list = document.createElement("div");
-            list.innerHTML = lines;
             const popup = document.createElement("div");
-            popup.append(title, note, list);
+            popup.textContent = linked.length
+              ? linked.map((group) => `${groupName(group.id)}：${groupCount(group.id)} 位`).join("　·　")
+              : "此行政區目前沒有對應大區統計。";
             if (linked.length === 1) window.selectDeshaoGroup?.(linked[0].id, true);
             layer.bindPopup(popup).openPopup();
           });
