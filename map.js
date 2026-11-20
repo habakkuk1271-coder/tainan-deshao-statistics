@@ -94,6 +94,11 @@
     };
   }
 
+  function refreshMapStyles() {
+    districtLayer?.eachLayer((layer) => layer.setStyle(adminStyle(layer.feature)));
+    boundaryLayer?.eachLayer((layer) => layer.setStyle(roadStyle(layer.feature)));
+  }
+
   function makeGroupButtons(ids) {
     const box = document.createElement("div");
     box.className = "map-popup-groups";
@@ -151,8 +156,7 @@
 
   function selectGroupOnMap(id, fit = true) {
     selectedId = id || "";
-    districtLayer?.setStyle(adminStyle);
-    boundaryLayer?.setStyle(roadStyle);
+    refreshMapStyles();
     map.closePopup();
     updateDetails(selectedId);
     if (!selectedId) {
@@ -174,8 +178,7 @@
   window.addEventListener("deshao:group-selected", (event) => selectGroupOnMap(event.detail?.id || "", event.detail?.fromMap !== true));
   window.resetDeshaoMap = () => {
     selectedId = "";
-    districtLayer?.setStyle(adminStyle);
-    boundaryLayer?.setStyle(roadStyle);
+    refreshMapStyles();
     map.closePopup();
     map.fitBounds(fullTainan, { padding: [28, 28] });
     updateDetails("");
