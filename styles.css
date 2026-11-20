@@ -157,7 +157,7 @@ h1 span { color: var(--mint); }
 #district-detail strong { color: #2f6c51; font-size: 11px; }
 #district-detail.is-selected { background: transparent; }
 .selection-detail.is-selected { display: block; }
-.selected-groups { display: grid; gap: 8px; max-height: clamp(150px, 28vh, 220px); margin: 8px 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 7px 0 0; scrollbar-color: #789985 #e0e8df; scrollbar-gutter: stable; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.selected-groups { display: grid; gap: 8px; max-height: clamp(135px, 22vh, 170px); margin: 8px 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 7px 0 0; scrollbar-color: #789985 #e0e8df; scrollbar-gutter: stable; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
 .selected-groups::-webkit-scrollbar { width: 8px; }
 .selected-groups::-webkit-scrollbar-track { border-radius: 8px; background: #e0e8df; }
 .selected-groups::-webkit-scrollbar-thumb { border: 2px solid #e0e8df; border-radius: 8px; background: #789985; }
