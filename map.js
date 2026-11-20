@@ -112,9 +112,11 @@
     .then((response) => { if (!response.ok) throw new Error(`行政區界服務回傳 ${response.status}`); return response.json(); })
     .then((geojson) => {
       if (!geojson || geojson.type !== "FeatureCollection" || !Array.isArray(geojson.features)) throw new Error("行政區向量格式不正確");
-      districtFeatures = geojson.features.filter((feature) => groupsForDistrict(feature).length);
+      districtFeatures = geojson.features;
       districtLayer = L.geoJSON({ type: "FeatureCollection", features: districtFeatures }, { style: styleDistrict, onEachFeature: addDistrictPopup }).addTo(map);
-      setStatus(`已載入 ${districtFeatures.length} 個行政區界線；道路分區線已移除`, false);
+      const cityBounds = districtLayer.getBounds();
+      if (cityBounds.isValid()) map.fitBounds(cityBounds, { padding: [34, 34] });
+      setStatus(`已載入全市 ${districtFeatures.length} 個行政區界線；道路線已移除`, false);
       window.setTimeout(() => { status.hidden = true; }, 3200);
     })
     .catch((error) => { console.error("Unable to load district vectors:", error); setStatus("行政區向量暫時無法載入。", true); });
