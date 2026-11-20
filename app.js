@@ -26,24 +26,44 @@
   }).join("");
 
   const districtDetail = $("#district-detail");
-  $("#district-list").addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-district]");
-    if (!button) return;
-    const row = data.distribution.find((item) => item.name === button.dataset.district);
-    const selected = button.getAttribute("aria-pressed") === "true";
-    $("#district-list").querySelectorAll("button[data-district]").forEach((item) => {
-      item.setAttribute("aria-pressed", String(!selected && item === button));
-    });
-    if (selected) {
+  const selectGroup = (name, { fromMap = false, toggle = false } = {}) => {
+    const row = data.distribution.find((item) => item.name === name);
+    if (!row) return;
+    const buttons = [...$("#district-list").querySelectorAll("button[data-district]")];
+    const active = buttons.some((button) => button.dataset.district === name && button.getAttribute("aria-pressed") === "true");
+    const clear = toggle && active;
+    buttons.forEach((button) => button.setAttribute("aria-pressed", String(!clear && button.dataset.district === name)));
+    if (clear) {
       $("#shown-total").textContent = total;
-      districtDetail.textContent = "已清除分區選取，顯示全部名單。點選任一大區可查看分區統計。";
+      districtDetail.textContent = "已清除大區選取，顯示全市名單。";
       districtDetail.classList.remove("is-selected");
+      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id: "", fromMap } }));
       return;
     }
-    const share = ((row.count / total) * 100).toFixed(1);
+    const share = total ? ((row.count / total) * 100).toFixed(1) : "0.0";
     $("#shown-total").textContent = row.count;
-    districtDetail.innerHTML = `<strong>${row.name}${row.grouped ? "（合併區）" : ""}</strong><span>${row.count} 位，占目前名單 ${share}%</span><span class="detail-hint">再次點選可清除選取</span>`;
+    const group = data.groupAreas?.find((item) => `${item.id} 大區` === name);
+    const range = group ? `<span class="detail-hint">${group.range}</span>` : "";
+    districtDetail.innerHTML = `<strong>${row.name}${row.grouped ? "（合併區）" : ""}</strong><span>${row.count} 位，占目前名單 ${share}%</span>${range}<span class="detail-hint">再次點選可清除選取</span>`;
     districtDetail.classList.add("is-selected");
+    const id = name.slice(0, 2);
+    window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id, fromMap } }));
+  };
+  window.selectDeshaoGroup = (id, fromMap = false) => {
+    const name = /^\d{1,2}$/.test(String(id)) ? `${String(id).padStart(2, "0")} 大區` : id;
+    if (!name) {
+      $("#district-list").querySelectorAll("button[data-district]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+      $("#shown-total").textContent = total;
+      districtDetail.textContent = "已回到全市名單；點選大區查看人數與實際分界道路。";
+      districtDetail.classList.remove("is-selected");
+      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id: "", fromMap } }));
+      return;
+    }
+    selectGroup(name, { fromMap });
+  };
+  $("#district-list").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-district]");
+    if (button) selectGroup(button.dataset.district, { toggle: true });
   });
 
   $("#history-chart").innerHTML = data.history.map((row, index) => {
