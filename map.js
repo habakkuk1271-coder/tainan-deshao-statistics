@@ -9,7 +9,7 @@
   const reset = document.querySelector("#map-reset");
   const fullTainan = L.latLngBounds([[22.86, 119.96], [23.44, 120.69]]);
   const colors = ["#62c5aa", "#66a8d4", "#e2bf69", "#f2a267", "#ed7968", "#aa8ce5", "#47a995", "#81b5df", "#dc83b0", "#c4a765", "#75b39d", "#e58d57", "#829ee1", "#d77a74", "#52b6c2", "#a2b95f", "#d480ad", "#aa91d3", "#46a49a"];
-  let selectedId = "";
+  let selectedIds = [];
   let districtLayer;
   let villageLayer;
   let districtFeatures = [];
@@ -49,95 +49,74 @@
 
   function styleDistrict(feature) {
     const assigned = groupsForDistrict(feature);
-    const active = selectedId && assigned.some((group) => group.id === selectedId);
-    const group = groups.find((item) => item.id === selectedId);
-    const entireDistrict = active && group && !group.villages?.length;
+    const activeGroups = assigned.filter((group) => selectedIds.includes(group.id));
+    const active = activeGroups.length > 0;
+    const colorId = activeGroups[0]?.id;
+    const entireDistrict = activeGroups.some((group) => !group.villages?.length);
     return {
-      color: active ? colorFor(selectedId) : "#819c93",
+      color: active ? colorFor(colorId) : "#819c93",
       weight: active ? 2.8 : 1.45,
       opacity: active ? 1 : 0.74,
-      fillColor: entireDistrict ? colorFor(selectedId) : "#53736b",
+      fillColor: entireDistrict ? colorFor(colorId) : "#53736b",
       fillOpacity: entireDistrict ? 0.42 : 0.015
     };
   }
 
   function styleVillage(feature) {
-    const active = selectedId && villageGroups(feature).includes(selectedId);
+    const activeId = villageGroups(feature).find((id) => selectedIds.includes(id));
+    const active = Boolean(activeId);
     return active
-      ? { color: colorFor(selectedId), weight: 1.8, opacity: 1, fillColor: colorFor(selectedId), fillOpacity: 0.64 }
+      ? { color: colorFor(activeId), weight: 1.8, opacity: 1, fillColor: colorFor(activeId), fillOpacity: 0.64 }
       : { color: "#819c93", weight: 0, opacity: 0, fillColor: "#000000", fillOpacity: 0 };
   }
 
   function refreshStyles() {
     districtLayer?.setStyle(styleDistrict);
     villageLayer?.eachLayer((layer) => {
-      const active = selectedId && villageGroups(layer.feature).includes(selectedId);
+      const active = villageGroups(layer.feature).some((id) => selectedIds.includes(id));
       layer.options.interactive = Boolean(active);
       if (layer._path) layer._path.style.pointerEvents = active ? "auto" : "none";
       layer.setStyle(styleVillage(layer.feature));
     });
   }
 
-  function makeGroupButtons(ids) {
-    const box = document.createElement("div");
-    box.className = "map-popup-groups";
-    ids.forEach((id) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "map-popup-group";
-      button.textContent = `${groupName(id)} · ${countFor(id)} 位`;
-      button.addEventListener("click", (event) => {
-        event.stopPropagation();
-        window.selectDeshaoGroup?.(id, true);
-        map.closePopup();
-      });
-      box.append(button);
-    });
-    return box;
-  }
-
-  function bindGroupPopup(feature, layer, ids, titleText) {
-    if (!ids.length) return;
-    const title = document.createElement("strong");
-    title.textContent = titleText;
-    const content = document.createElement("div");
-    content.className = "map-popup";
-    content.append(title, makeGroupButtons(ids));
-    layer.bindPopup(content, { maxWidth: 270 });
-    layer.on("click", () => layer.openPopup());
-  }
-
   function addDistrictPopup(feature, layer) {
     const ids = groupsForDistrict(feature).map((group) => group.id);
-    bindGroupPopup(feature, layer, ids, districtName(feature));
+    if (ids.length) layer.on("click", () => window.selectDeshaoGroups?.(ids, true));
   }
 
   function addVillagePopup(feature, layer) {
-    bindGroupPopup(feature, layer, villageGroups(feature), `${districtName(feature)}・${villageName(feature)}`);
+    const ids = villageGroups(feature);
+    if (ids.length) layer.on("click", () => window.selectDeshaoGroups?.(ids, true));
   }
 
-  function selectGroupOnMap(id, fit = true) {
-    selectedId = id || "";
+  function selectGroupsOnMap(ids, fit = true) {
+    selectedIds = [...new Set((Array.isArray(ids) ? ids : [ids]).filter(Boolean))];
     refreshStyles();
     map.closePopup();
-    if (!selectedId) {
+    if (!selectedIds.length) {
       if (fit) map.fitBounds(fullTainan, { padding: [28, 28] });
       return;
     }
     if (!fit) return;
-    const group = groups.find((item) => item.id === selectedId);
-    if (!group) return;
     const bounds = L.latLngBounds([]);
-    const matches = group.villages?.length
-      ? villageFeatures.filter((feature) => villageGroups(feature).includes(selectedId))
-      : districtFeatures.filter((feature) => group.districts.some((name) => normalize(name) === normalize(districtName(feature))));
+    const matches = selectedIds.flatMap((id) => {
+      const group = groups.find((item) => item.id === id);
+      if (!group) return [];
+      return group.villages?.length
+        ? villageFeatures.filter((feature) => villageGroups(feature).includes(id))
+        : districtFeatures.filter((feature) => group.districts.some((name) => normalize(name) === normalize(districtName(feature))));
+    });
     matches.forEach((feature) => bounds.extend(L.geoJSON(feature).getBounds()));
     if (bounds.isValid()) map.fitBounds(bounds, { padding: [36, 36], maxZoom: matches.length === 1 ? 13 : 12 });
   }
 
-  window.addEventListener("deshao:group-selected", (event) => selectGroupOnMap(event.detail?.id || "", event.detail?.fromMap !== true));
+  window.addEventListener("deshao:group-selected", (event) => {
+    const ids = event.detail?.ids || (event.detail?.id ? [event.detail.id] : []);
+    selectGroupsOnMap(ids, event.detail?.fromMap !== true);
+  });
   window.resetDeshaoMap = () => {
-    selectedId = "";
+    selectedIds = [];
     refreshStyles();
     map.closePopup();
     map.fitBounds(fullTainan, { padding: [28, 28] });
