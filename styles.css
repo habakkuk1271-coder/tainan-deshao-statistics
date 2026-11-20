@@ -156,6 +156,14 @@ h1 span { color: var(--mint); }
 #district-detail { min-height: 0; padding: 8px 0 0; border: 0; border-radius: 0; background: transparent; color: #66766c; font-size: 10px; }
 #district-detail strong { color: #2f6c51; font-size: 11px; }
 #district-detail.is-selected { background: transparent; }
+.selection-detail.is-selected { display: block; }
+.selected-groups { display: grid; gap: 8px; max-height: min(34vh, 290px); margin: 8px 0; overflow-y: auto; padding-right: 4px; }
+.selected-group { padding: 8px 9px; border: 1px solid rgba(61,123,85,.16); border-radius: 9px; background: rgba(255,255,255,.42); }
+.selected-group-title { display: flex; justify-content: space-between; gap: 8px; margin: 0; color: #2f6c51; font-size: 11px; font-weight: 700; }
+.selected-group-title small { color: #60776a; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.selected-group-meta { display: block; margin-top: 3px; color: #61756a; font-size: 10px; }
+.selected-name-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 8px; margin: 7px 0 0; padding: 0; color: #35483d; font-size: 10px; line-height: 1.55; list-style: none; }
+.selected-group-empty { display: block; margin-top: 5px; color: #78867e; font-size: 10px; }
 .map-list-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 16px 2px 9px; }
 .map-list-heading strong { color: #263d32; font-size: 12px; }
 .map-list-heading span { color: #859088; font-size: 9px; }
@@ -213,7 +221,6 @@ h1 span { color: var(--mint); }
   .page-shell { width: calc(100% - 24px); }
   .map-stage, #tainan-map { min-height: 62vh; }
 }
-
 
 /* Responsive reading layout; map layers and data styling remain unchanged. */
 .kpi-label { font-size: 14px; }
