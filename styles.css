@@ -33,7 +33,7 @@ h1 span { color: var(--mint); }
 .freshness { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 12px; white-space: nowrap; }
 .freshness strong { color: var(--text); font-weight: 600; }
 .live-dot { width: 7px; height: 7px; background: var(--mint); border-radius: 50%; box-shadow: 0 0 13px var(--mint); }
-.kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-bottom: 17px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 13px; margin-bottom: 17px; }
 .kpi-card, .panel { border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgba(29, 42, 41, .96), rgba(22, 32, 32, .96)); }
 .kpi-card { min-height: 133px; padding: 19px 20px; }
 .kpi-card.featured { border-color: rgba(133, 207, 176, .35); background: linear-gradient(145deg, #244038, #1b2d2c); }
