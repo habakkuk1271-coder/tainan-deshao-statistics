@@ -1,8 +1,7 @@
 /*
- * Aggregated display data only.
- * Source: Google Sheet「台南得榮少年總名單（重要）」, tab 115-1總名單
- * refreshed from the workbook's latest summary on 2026-10-20; baptized current-roster count cross-matched to the baptism register.
- * No names, contact information, identifiers, or row-level records are stored here.
+ * Display data for the 115-1 dashboard.
+ * Names by group come from the 115-1 roster; village and household totals come from the 202610 distribution sheet.
+ * Only names, aggregate statistics, and group assignments are included; contact details and roster identifiers are excluded.
  */
 window.DESHAO_DATA = {
   sourceDate: "2026-10-20",
@@ -88,5 +87,232 @@ window.DESHAO_DATA = {
     { period: "114-1", count: 118 },
     { period: "114-2", count: 114 },
     { period: "115-1", count: 110 }
-  ]
+  ],
+  zoneStats: {
+    "10": {
+        "villages": 30,
+        "households": 67900
+    },
+    "11": {
+        "villages": 117,
+        "households": 88022
+    },
+    "12": {
+        "villages": 87,
+        "households": 62918
+    },
+    "13": {
+        "villages": 62,
+        "households": 44767
+    },
+    "14": {
+        "villages": 100,
+        "households": 78774
+    },
+    "15": {
+        "villages": 37,
+        "households": 50601
+    },
+    "16": {
+        "villages": 5,
+        "households": 9470
+    },
+    "17": {
+        "villages": 13,
+        "households": 17223
+    },
+    "18": {
+        "villages": 12,
+        "households": 20052
+    },
+    "19": {
+        "villages": 10,
+        "households": 23522
+    },
+    "01": {
+        "villages": 20,
+        "households": 34496
+    },
+    "05": {
+        "villages": 13,
+        "households": 33292
+    },
+    "08": {
+        "villages": 51,
+        "households": 79569
+    },
+    "02": {
+        "villages": 33,
+        "households": 56175
+    },
+    "06": {
+        "villages": 8,
+        "households": 22603
+    },
+    "03": {
+        "villages": 6,
+        "households": 5821
+    },
+    "07": {
+        "villages": 8,
+        "households": 12963
+    },
+    "04": {
+        "villages": 13,
+        "households": 17223
+    },
+    "09": {
+        "villages": 60,
+        "households": 75276
+    }
+},
+  namesByGroup: {
+    "10": [
+        "杜瑀潼",
+        "于俊毅",
+        "許晉豪",
+        "吳勁億",
+        "吳嫚娟",
+        "賴姿聿",
+        "蔡忠佑"
+    ],
+    "11": [
+        "陳國豪",
+        "林恩琦",
+        "莊卉竹",
+        "莊卉羽",
+        "黃于睿",
+        "黃詠華",
+        "王晟加",
+        "力世昕",
+        "劉怡君",
+        "劉祉岑",
+        "董力銜",
+        "楊智鈞",
+        "劉仲勛",
+        "力紹旻",
+        "陳柏翰",
+        "李銘勳",
+        "黃思路",
+        "陳俊諺",
+        "陳奕蒼",
+        "李鈺庭"
+    ],
+    "12": [
+        "林妙欣",
+        "林上揚",
+        "潘姿君",
+        "吳明信"
+    ],
+    "13": [
+        "陳冠名",
+        "蔡玉姿",
+        "曾芷榆",
+        "曾品宸",
+        "張渼郁",
+        "張渼翎",
+        "謝成新",
+        "謝信安",
+        "謝迦南"
+    ],
+    "14": [
+        "朱祐佑",
+        "王柏升",
+        "蔡承羿",
+        "何家呁",
+        "張芷綾",
+        "何家瑩",
+        "何芊妤",
+        "何芃妤",
+        "許允誠",
+        "許允智",
+        "廖慧今",
+        "朱佑哲",
+        "賴俞佑",
+        "曾姿穎",
+        "張欣柔"
+    ],
+    "15": [
+        "力子安",
+        "力子洋",
+        "力子瑋",
+        "楊千羲",
+        "張維恩",
+        "張元曨",
+        "盧念華"
+    ],
+    "16": [
+        "金曉瑜",
+        "林子駖",
+        "胡雅雯",
+        "邵意庭",
+        "邵唯恩",
+        "李建民"
+    ],
+    "17": [
+        "陳婉婷",
+        "陳志杰"
+    ],
+    "18": [
+        "魏銣彤",
+        "張克誠",
+        "張豪仁"
+    ],
+    "19": [
+        "李玟豫",
+        "葉姵筠",
+        "葉姵涵"
+    ],
+    "02": [
+        "李昀靜",
+        "張沛琳",
+        "蔣樹澤",
+        "李家儀",
+        "李家慧",
+        "李冠樺",
+        "蔣凱芯",
+        "林新閎",
+        "林宥妘"
+    ],
+    "09": [
+        "黃弘睿",
+        "方淳巧",
+        "呂承恩",
+        "邱品皓",
+        "梁瑜芳",
+        "梁准瑋",
+        "邱梓玹",
+        "李宜恩",
+        "顏瑋澤",
+        "王昱凱"
+    ],
+    "04": [
+        "林采緹",
+        "吳敏睿",
+        "吳敏綺"
+    ],
+    "01": [
+        "林台金",
+        "楊祐誠",
+        "楊閔媛",
+        "林台茵",
+        "李品翰"
+    ],
+    "08": [
+        "黃惟銨",
+        "吳丞惟"
+    ],
+    "06": [
+        "柯星妤",
+        "謝侑廷",
+        "謝雨彤"
+    ],
+    "03": [
+        "陳宥豪"
+    ],
+    "05": [
+        "謝庭鈞"
+    ],
+    "07": []
+}
 };
