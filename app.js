@@ -11,6 +11,7 @@
   $("#current-total").textContent = total;
   $("#elementary-total").textContent = data.stageCounts.elementary;
   $("#secondary-total").textContent = data.stageCounts.secondary;
+  $("#college-total").textContent = data.stageCounts.college;
   $("#baptized-total").textContent = data.baptized;
   $("#shown-total").textContent = total;
   $("#period-sum").textContent = `${periodSum} 人次`;
