@@ -54,7 +54,7 @@
     if (!name) {
       $("#district-list").querySelectorAll("button[data-district]").forEach((button) => button.setAttribute("aria-pressed", "false"));
       $("#shown-total").textContent = total;
-      districtDetail.textContent = "已回到全市名單；點選大區查看人數與實際分界道路。";
+      districtDetail.textContent = "已回到全市名單；點選大區查看人數與行政區位置。";
       districtDetail.classList.remove("is-selected");
       window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id: "", fromMap } }));
       return;
