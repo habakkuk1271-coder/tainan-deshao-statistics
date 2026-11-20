@@ -1,7 +1,7 @@
 /*
  * Aggregated display data only.
  * Source: Google Sheet「台南得榮少年總名單（重要）」, tab 115-1總名單
- * refreshed from the workbook's latest summary on 2026-10-20.
+ * refreshed from the workbook's latest summary on 2026-10-20; baptized current-roster count cross-matched to the baptism register.
  * No names, contact information, identifiers, or row-level records are stored here.
  */
 window.DESHAO_DATA = {
@@ -13,7 +13,7 @@ window.DESHAO_DATA = {
     secondary: 81,
     college: 11
   },
-  baptized: 56,
+  baptized: 55,
   distribution: [
     { name: "11 大區", count: 20 },
     { name: "14 大區", count: 15 },
