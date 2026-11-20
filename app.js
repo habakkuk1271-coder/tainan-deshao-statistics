@@ -27,6 +27,7 @@
   }).join("");
 
   const districtDetail = $("#district-detail");
+  const escapeHtml = (value) => String(value).replace(/[&<>\"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[char]);
   const selectGroups = (names, { fromMap = false, toggle = false } = {}) => {
     const rows = names.map((name) => data.distribution.find((item) => item.name === name)).filter(Boolean);
     if (!rows.length) return;
@@ -45,10 +46,17 @@
     const count = rows.reduce((sum, row) => sum + row.count, 0);
     const share = total ? ((count / total) * 100).toFixed(1) : "0.0";
     $("#shown-total").textContent = count;
-    const labels = rows.map((row) => `${row.name}${row.grouped ? "（合併區）" : ""}`).join("、");
-    const ranges = rows.map((row) => data.groupAreas?.find((item) => `${item.id} 大區` === row.name)?.range).filter(Boolean);
-    const range = ranges.length ? `<span class="detail-hint">${ranges.join("；")}</span>` : "";
-    districtDetail.innerHTML = `<strong>${labels}</strong><span>${count} 位，占目前名單 ${share}%</span>${range}<span class="detail-hint">再次點選可清除選取</span>`;
+    const groupDetails = rows.map((row) => {
+      const id = row.name.slice(0, 2);
+      const stats = data.zoneStats?.[id];
+      const names = data.namesByGroup?.[id] || [];
+      const statsLine = stats ? `<span class="selected-group-meta">${stats.villages} 里・${Number(stats.households).toLocaleString("zh-TW")} 戶</span>` : "";
+      const namesList = names.length
+        ? `<ul class="selected-name-list">${names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul>`
+        : `<span class="selected-group-empty">目前名單無得少</span>`;
+      return `<section class="selected-group"><h3 class="selected-group-title"><span>${escapeHtml(row.name)}${row.grouped ? "（合併區）" : ""}</span><small>${row.count} 位</small></h3>${statsLine}${namesList}</section>`;
+    }).join("");
+    districtDetail.innerHTML = `<strong>${rows.length > 1 ? "所選大區" : "大區資料"}</strong><span>${count} 位，占目前名單 ${share}%</span><div class="selected-groups">${groupDetails}</div><span class="detail-hint">再次點選可清除選取</span>`;
     districtDetail.classList.add("is-selected");
     const ids = rows.map((row) => row.name.slice(0, 2));
     window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { ids, id: ids.length === 1 ? ids[0] : "", fromMap } }));
