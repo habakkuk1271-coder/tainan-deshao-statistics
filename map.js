@@ -56,13 +56,13 @@
     const linked = groups.filter((group) => group.districts.some((name) => normalizeDistrict(name) === district));
     const selectedGroup = groups.find((group) => group.id === selectedId);
     const active = selectedGroup && selectedGroup.roads.length === 0 && linked.some((group) => group.id === selectedId);
-    return { color: active ? groupColor(selectedId) : "#829197", weight: active ? 3.8 : 2.35, opacity: active ? 1 : 0.92, fill: true, fillColor: active ? groupColor(selectedId) : "#171b1c", fillOpacity: active ? 0.23 : 0.004, interactive: true };
+    return { color: active ? groupColor(selectedId) : "#829197", weight: active ? 4.1 : 2.9, opacity: active ? 1 : 0.96, fill: true, fillColor: active ? groupColor(selectedId) : "#171b1c", fillOpacity: active ? 0.23 : 0.004, interactive: true };
   };
 
   const roadStyle = (feature) => {
     const ids = feature.properties?.groups || [];
     const active = selectedId && ids.includes(selectedId);
-    return { color: active ? groupColor(selectedId) : "#a3b0b4", weight: active ? 5.4 : selectedId ? 1.6 : 2.35, opacity: active ? 1 : selectedId ? 0.25 : 0.84, lineCap: "round", lineJoin: "round", interactive: true };
+    return { color: active ? groupColor(selectedId) : "#a3b0b4", weight: active ? 5.2 : selectedId ? 2.0 : 2.7, opacity: active ? 1 : selectedId ? 0.48 : 0.92, lineCap: "round", lineJoin: "round", interactive: true };
   };
 
   const displayRoadPopup = (feature, layer) => {
@@ -159,7 +159,7 @@
       setStatus("行政區向量暫時無法載入；道路分界仍可使用。", true);
     });
 
-  fetch("road-boundaries.geojson?v=20261120-bold-clickable-boundaries")
+  fetch("road-boundaries.geojson?v=20261120-bold-clickable-boundaries-v2")
     .then((response) => {
       if (!response.ok) throw new Error(`道路向量回傳 ${response.status}`);
       return response.json();
