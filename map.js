@@ -95,8 +95,22 @@
   }
 
   function refreshMapStyles() {
-    districtLayer?.eachLayer((layer) => layer.setStyle(adminStyle(layer.feature)));
-    boundaryLayer?.eachLayer((layer) => layer.setStyle(roadStyle(layer.feature)));
+    districtLayer?.eachLayer((layer) => {
+      const active = !selectedId || adminGroupIds(layer.feature).includes(selectedId);
+      layer.options.interactive = active;
+      if (layer._path) layer._path.style.pointerEvents = active ? "auto" : "none";
+      layer.setStyle(adminStyle(layer.feature));
+    });
+    boundaryLayer?.eachLayer((layer) => {
+      const active = !selectedId || (layer.feature.properties?.mapGroups || []).includes(selectedId);
+      layer.options.interactive = active;
+      if (layer._path) layer._path.style.pointerEvents = active ? "auto" : "none";
+      layer.setStyle(roadStyle(layer.feature));
+    });
+    hitLayer.eachLayer((layer) => {
+      const active = !selectedId || (layer.options.mapGroups || []).includes(selectedId);
+      layer.options.interactive = active;
+    });
   }
 
   function makeGroupButtons(ids) {
@@ -148,6 +162,7 @@
     const hit = L.polyline(feature.geometry.coordinates.map(([lng, lat]) => [lat, lng]), {
       color: "#fff", weight: 22, opacity: 0, interactive: true
     }).addTo(hitLayer);
+    hit.options.mapGroups = ids;
     hit.on("click", (event) => {
       L.DomEvent.stopPropagation(event);
       layer.openPopup(event.latlng);
