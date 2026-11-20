@@ -27,28 +27,37 @@
   }).join("");
 
   const districtDetail = $("#district-detail");
-  const selectGroup = (name, { fromMap = false, toggle = false } = {}) => {
-    const row = data.distribution.find((item) => item.name === name);
-    if (!row) return;
+  const selectGroups = (names, { fromMap = false, toggle = false } = {}) => {
+    const rows = names.map((name) => data.distribution.find((item) => item.name === name)).filter(Boolean);
+    if (!rows.length) return;
     const buttons = [...$("#district-list").querySelectorAll("button[data-district]")];
-    const active = buttons.some((button) => button.dataset.district === name && button.getAttribute("aria-pressed") === "true");
+    const active = rows.length === 1 && buttons.some((button) => button.dataset.district === rows[0].name && button.getAttribute("aria-pressed") === "true");
     const clear = toggle && active;
-    buttons.forEach((button) => button.setAttribute("aria-pressed", String(!clear && button.dataset.district === name)));
+    const selectedNames = clear ? [] : rows.map((row) => row.name);
+    buttons.forEach((button) => button.setAttribute("aria-pressed", String(selectedNames.includes(button.dataset.district))));
     if (clear) {
       $("#shown-total").textContent = total;
       districtDetail.textContent = "已清除大區選取，顯示全市名單。";
       districtDetail.classList.remove("is-selected");
-      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id: "", fromMap } }));
+      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { ids: [], id: "", fromMap } }));
       return;
     }
-    const share = total ? ((row.count / total) * 100).toFixed(1) : "0.0";
-    $("#shown-total").textContent = row.count;
-    const group = data.groupAreas?.find((item) => `${item.id} 大區` === name);
-    const range = group ? `<span class="detail-hint">${group.range}</span>` : "";
-    districtDetail.innerHTML = `<strong>${row.name}${row.grouped ? "（合併區）" : ""}</strong><span>${row.count} 位，占目前名單 ${share}%</span>${range}<span class="detail-hint">再次點選可清除選取</span>`;
+    const count = rows.reduce((sum, row) => sum + row.count, 0);
+    const share = total ? ((count / total) * 100).toFixed(1) : "0.0";
+    $("#shown-total").textContent = count;
+    const labels = rows.map((row) => `${row.name}${row.grouped ? "（合併區）" : ""}`).join("、");
+    const ranges = rows.map((row) => data.groupAreas?.find((item) => `${item.id} 大區` === row.name)?.range).filter(Boolean);
+    const range = ranges.length ? `<span class="detail-hint">${ranges.join("；")}</span>` : "";
+    districtDetail.innerHTML = `<strong>${labels}</strong><span>${count} 位，占目前名單 ${share}%</span>${range}<span class="detail-hint">再次點選可清除選取</span>`;
     districtDetail.classList.add("is-selected");
-    const id = name.slice(0, 2);
-    window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id, fromMap } }));
+    const ids = rows.map((row) => row.name.slice(0, 2));
+    window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { ids, id: ids.length === 1 ? ids[0] : "", fromMap } }));
+  };
+  const selectGroup = (name, options = {}) => selectGroups([name], options);
+  window.selectDeshaoGroups = (ids, fromMap = false) => {
+    const names = [...new Set((Array.isArray(ids) ? ids : [ids]).map((id) => String(id).padStart(2, "0") + " 大區"))];
+    if (!names.length) return window.selectDeshaoGroup?.("", fromMap);
+    selectGroups(names, { fromMap });
   };
   window.selectDeshaoGroup = (id, fromMap = false) => {
     const name = /^\d{1,2}$/.test(String(id)) ? `${String(id).padStart(2, "0")} 大區` : id;
@@ -57,7 +66,7 @@
       $("#shown-total").textContent = total;
       districtDetail.textContent = "已回到全市名單；點選大區查看人數與行政區位置。";
       districtDetail.classList.remove("is-selected");
-      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { id: "", fromMap } }));
+      window.dispatchEvent(new CustomEvent("deshao:group-selected", { detail: { ids: [], id: "", fromMap } }));
       return;
     }
     selectGroup(name, { fromMap });
