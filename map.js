@@ -159,7 +159,7 @@
       setStatus("行政區向量暫時無法載入；道路分界仍可使用。", true);
     });
 
-  fetch("road-boundaries.geojson?v=20261120-road-map")
+  fetch("road-boundaries.geojson?v=20261120-dark-vector")
     .then((response) => {
       if (!response.ok) throw new Error(`道路向量回傳 ${response.status}`);
       return response.json();
