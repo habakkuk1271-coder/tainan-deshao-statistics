@@ -61,10 +61,10 @@
     const active = selectedId && ids.includes(selectedId);
     return {
       color: active ? colorFor(selectedId) : "#84a39a",
-      weight: active ? 3.2 : 1.8,
-      opacity: active ? 1 : 0.8,
+      weight: active ? 3.2 : selectedId ? 0 : 1.2,
+      opacity: active ? 1 : selectedId ? 0 : 0.46,
       fillColor: active ? colorFor(selectedId) : "#53736b",
-      fillOpacity: active ? 0.45 : 0.15
+      fillOpacity: active ? 0.45 : selectedId ? 0 : 0.07
     };
   }
 
@@ -87,8 +87,8 @@
     const active = selectedId && (feature.properties?.mapGroups || []).includes(selectedId);
     return {
       color: active ? colorFor(selectedId) : "#9fb0b5",
-      weight: active ? 6 : 3.5,
-      opacity: active ? 1 : 0.78,
+      weight: active ? 6 : selectedId ? 0.1 : 2,
+      opacity: active ? 1 : selectedId ? 0 : 0.34,
       lineCap: "round",
       lineJoin: "round"
     };
