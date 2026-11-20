@@ -11,19 +11,34 @@
   const colors = ["#62c5aa", "#66a8d4", "#e2bf69", "#f2a267", "#ed7968", "#aa8ce5", "#47a995", "#81b5df", "#dc83b0", "#c4a765", "#75b39d", "#e58d57", "#829ee1", "#d77a74", "#52b6c2", "#a2b95f", "#d480ad", "#aa91d3", "#46a49a"];
   let selectedId = "";
   let districtLayer;
+  let villageLayer;
   let districtFeatures = [];
+  let villageFeatures = [];
 
   const countFor = (id) => data.distribution.find((item) => item.name.startsWith(`${id} `))?.count ?? 0;
   const colorFor = (id) => colors[(Number(id) - 1) % colors.length];
   const groupName = (id) => `${id} 大區`;
-  const normalize = (s) => String(s || "").replace(/^臺南市/, "").replace(/區$/, "").replace(/[　\s]/g, "");
+  const normalize = (s) => String(s || "").replace(/^臺南市/, "").replace(/[　\s]/g, "").replace(/區$/, "").replace(/里$/, "").replace(/臺/g, "台").replace(/鹽/g, "塩");
   const districtName = (feature) => {
     const p = feature.properties || {};
     return p.TOWNNAME || p.TOWNID || p.name || p.NAME || "臺南市行政區";
   };
+  const villageName = (feature) => feature.properties?.VILLNAME || "";
   const groupsForDistrict = (feature) => {
     const name = normalize(districtName(feature));
     return groups.filter((group) => group.districts.some((district) => normalize(district) === name));
+  };
+  const villageGroups = (feature) => {
+    const town = normalize(districtName(feature));
+    const village = normalize(villageName(feature));
+    return groups.filter((group) => {
+      if (!group.villages?.length) return false;
+      if (!group.districts.some((district) => normalize(district) === town)) return false;
+      return group.villages.some((entry) => {
+        const [entryTown, entryVillage] = entry.split("|");
+        return normalize(entryTown) === town && normalize(entryVillage) === village;
+      });
+    }).map((group) => group.id);
   };
 
   function setStatus(message, isError = false) {
@@ -35,30 +50,45 @@
   function styleDistrict(feature) {
     const assigned = groupsForDistrict(feature);
     const active = selectedId && assigned.some((group) => group.id === selectedId);
-    const selectedGroup = groups.find((group) => group.id === selectedId);
-    // A named-road range is not a district polygon. Keep its administrative frame
-    // visible as context without tinting the entire township as if it were the group.
-    const exactDistrictArea = active && selectedGroup && selectedGroup.roads.length === 0;
+    const group = groups.find((item) => item.id === selectedId);
+    const entireDistrict = active && group && !group.villages?.length;
     return {
       color: active ? colorFor(selectedId) : "#819c93",
-      weight: active ? 3.6 : 1.7,
-      opacity: active ? 1 : 0.78,
-      fillColor: exactDistrictArea ? colorFor(selectedId) : "#53736b",
-      fillOpacity: exactDistrictArea ? 0.44 : 0.025
+      weight: active ? 2.8 : 1.45,
+      opacity: active ? 1 : 0.74,
+      fillColor: entireDistrict ? colorFor(selectedId) : "#53736b",
+      fillOpacity: entireDistrict ? 0.42 : 0.015
     };
   }
 
-  function makeGroupButtons(foundGroups) {
+  function styleVillage(feature) {
+    const active = selectedId && villageGroups(feature).includes(selectedId);
+    return active
+      ? { color: colorFor(selectedId), weight: 1.8, opacity: 1, fillColor: colorFor(selectedId), fillOpacity: 0.64 }
+      : { color: "#819c93", weight: 0, opacity: 0, fillColor: "#000000", fillOpacity: 0 };
+  }
+
+  function refreshStyles() {
+    districtLayer?.setStyle(styleDistrict);
+    villageLayer?.eachLayer((layer) => {
+      const active = selectedId && villageGroups(layer.feature).includes(selectedId);
+      layer.options.interactive = Boolean(active);
+      if (layer._path) layer._path.style.pointerEvents = active ? "auto" : "none";
+      layer.setStyle(styleVillage(layer.feature));
+    });
+  }
+
+  function makeGroupButtons(ids) {
     const box = document.createElement("div");
     box.className = "map-popup-groups";
-    foundGroups.forEach((group) => {
+    ids.forEach((id) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "map-popup-group";
-      button.textContent = `${groupName(group.id)} · ${countFor(group.id)} 位`;
+      button.textContent = `${groupName(id)} · ${countFor(id)} 位`;
       button.addEventListener("click", (event) => {
         event.stopPropagation();
-        window.selectDeshaoGroup?.(group.id, true);
+        window.selectDeshaoGroup?.(id, true);
         map.closePopup();
       });
       box.append(button);
@@ -66,21 +96,29 @@
     return box;
   }
 
-  function addDistrictPopup(feature, layer) {
-    const foundGroups = groupsForDistrict(feature);
-    if (!foundGroups.length) return;
+  function bindGroupPopup(feature, layer, ids, titleText) {
+    if (!ids.length) return;
     const title = document.createElement("strong");
-    title.textContent = districtName(feature);
+    title.textContent = titleText;
     const content = document.createElement("div");
     content.className = "map-popup";
-    content.append(title, makeGroupButtons(foundGroups));
+    content.append(title, makeGroupButtons(ids));
     layer.bindPopup(content, { maxWidth: 270 });
     layer.on("click", () => layer.openPopup());
   }
 
+  function addDistrictPopup(feature, layer) {
+    const ids = groupsForDistrict(feature).map((group) => group.id);
+    bindGroupPopup(feature, layer, ids, districtName(feature));
+  }
+
+  function addVillagePopup(feature, layer) {
+    bindGroupPopup(feature, layer, villageGroups(feature), `${districtName(feature)}・${villageName(feature)}`);
+  }
+
   function selectGroupOnMap(id, fit = true) {
     selectedId = id || "";
-    districtLayer?.setStyle(styleDistrict);
+    refreshStyles();
     map.closePopup();
     if (!selectedId) {
       if (fit) map.fitBounds(fullTainan, { padding: [28, 28] });
@@ -89,18 +127,18 @@
     if (!fit) return;
     const group = groups.find((item) => item.id === selectedId);
     if (!group) return;
-    const matches = districtFeatures.filter((feature) => group.districts.some((district) => normalize(district) === normalize(districtName(feature))));
-    if (matches.length) {
-      const bounds = L.latLngBounds([]);
-      matches.forEach((feature) => bounds.extend(L.geoJSON(feature).getBounds()));
-      if (bounds.isValid()) map.fitBounds(bounds, { padding: [48, 48], maxZoom: matches.length === 1 ? 12 : 10 });
-    }
+    const bounds = L.latLngBounds([]);
+    const matches = group.villages?.length
+      ? villageFeatures.filter((feature) => villageGroups(feature).includes(selectedId))
+      : districtFeatures.filter((feature) => group.districts.some((name) => normalize(name) === normalize(districtName(feature))));
+    matches.forEach((feature) => bounds.extend(L.geoJSON(feature).getBounds()));
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [36, 36], maxZoom: matches.length === 1 ? 13 : 12 });
   }
 
   window.addEventListener("deshao:group-selected", (event) => selectGroupOnMap(event.detail?.id || "", event.detail?.fromMap !== true));
   window.resetDeshaoMap = () => {
     selectedId = "";
-    districtLayer?.setStyle(styleDistrict);
+    refreshStyles();
     map.closePopup();
     map.fitBounds(fullTainan, { padding: [28, 28] });
   };
@@ -108,18 +146,30 @@
 
   const districtQuery = new URLSearchParams({ where: "1=1", outFields: "TOWNID,TOWNCODE,TOWNNAME,TOWNENG", returnGeometry: "true", outSR: "4326", f: "geojson" });
   const districtSource = "https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0/query?" + districtQuery.toString();
-  fetch(districtSource, { mode: "cors" })
-    .then((response) => { if (!response.ok) throw new Error(`行政區界服務回傳 ${response.status}`); return response.json(); })
-    .then((geojson) => {
-      if (!geojson || geojson.type !== "FeatureCollection" || !Array.isArray(geojson.features)) throw new Error("行政區向量格式不正確");
-      districtFeatures = geojson.features;
+  const villageQuery = new URLSearchParams({ where: "1=1", outFields: "COUNTYNAME,TOWNNAME,VILLNAME,VILLCODE", returnGeometry: "true", outSR: "4326", f: "geojson" });
+  const villageSource = "https://services2.arcgis.com/OuqldCWB2weQ4da0/ArcGIS/rest/services/%E5%8F%B0%E5%8D%97%E6%9D%91%E9%87%8C%E7%95%8C/FeatureServer/0/query?" + villageQuery.toString();
+
+  Promise.all([
+    fetch(districtSource, { mode: "cors" }).then((response) => { if (!response.ok) throw new Error(`行政區界服務回傳 ${response.status}`); return response.json(); }),
+    fetch(villageSource, { mode: "cors" }).then((response) => { if (!response.ok) throw new Error(`里界服務回傳 ${response.status}`); return response.json(); })
+  ])
+    .then(([districtGeojson, villageGeojson]) => {
+      if (districtGeojson?.type !== "FeatureCollection" || !Array.isArray(districtGeojson.features)) throw new Error("行政區界向量格式不正確");
+      if (villageGeojson?.type !== "FeatureCollection" || !Array.isArray(villageGeojson.features)) throw new Error("里界向量格式不正確");
+      districtFeatures = districtGeojson.features;
+      villageFeatures = villageGeojson.features.filter((feature) => normalize(feature.properties?.COUNTYNAME) === normalize("臺南市"));
       districtLayer = L.geoJSON({ type: "FeatureCollection", features: districtFeatures }, { style: styleDistrict, onEachFeature: addDistrictPopup }).addTo(map);
+      villageLayer = L.geoJSON({ type: "FeatureCollection", features: villageFeatures }, { style: styleVillage, onEachFeature: addVillagePopup }).addTo(map);
       const cityBounds = districtLayer.getBounds();
       if (cityBounds.isValid()) map.fitBounds(cityBounds, { padding: [34, 34] });
-      setStatus(`已載入全市 ${districtFeatures.length} 個行政區界線；道路線已移除`, false);
-      window.setTimeout(() => { status.hidden = true; }, 3200);
+      refreshStyles();
+      setStatus(`已載入 ${districtFeatures.length} 個行政區界及 ${villageFeatures.length} 個里界`, false);
+      window.setTimeout(() => { status.hidden = true; }, 3300);
     })
-    .catch((error) => { console.error("Unable to load district vectors:", error); setStatus("行政區向量暫時無法載入。", true); });
+    .catch((error) => {
+      console.error("Unable to load Tainan administrative vectors:", error);
+      setStatus("行政區或里界向量暫時無法載入。", true);
+    });
 
   reset.addEventListener("click", () => { window.selectDeshaoGroup?.("", true); window.resetDeshaoMap?.(); });
 })();
