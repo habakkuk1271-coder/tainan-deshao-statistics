@@ -7,7 +7,7 @@
     <meta name="description" content="台南得少統計互動儀表板" />
     <title>台南得少統計</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <link rel="stylesheet" href="styles.css?v=20261118-area-counts" />
+    <link rel="stylesheet" href="styles.css?v=20261120-road-map" />
   </head>
   <body>
     <header class="topbar">
@@ -23,7 +23,7 @@
         <div>
           <p class="eyebrow">得榮少年教育專案</p>
           <h1>看見分布，<span>掌握近況</span></h1>
-          <p class="intro-copy">臺南行政區地圖與得少概況。</p>
+          <p class="intro-copy">以實際道路界線檢視臺南各大區範圍與名冊人數。</p>
         </div>
         <div class="freshness"><span class="live-dot"></span><span>目前名單</span><strong id="latest-period"></strong></div>
       </section>
@@ -58,29 +58,29 @@
             <h2>得少概況地圖</h2>
           </div>
           <div class="map-actions">
-            <span class="map-source-pill"><span class="source-dot"></span>臺南行政區界向量</span>
+            <span class="map-source-pill"><span class="source-dot"></span>道路向量分界圖</span>
             <a class="official-map-link" href="https://landmap.tainan.gov.tw/gis/" target="_blank" rel="noopener">官方地籍圖台 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
-        <p class="section-note map-note">點選實際市行政區界，查看名冊關懷據點人數及大區拆分；這是照顧據點統計，不代表居住地。</p>
+        <p class="section-note map-note">點選右側大區或彩色道路，可查看分界路段與名冊人數。彩色線條沿實際道路中心線繪製；跨整個行政區的大區則以行政區界顯示。</p>
         <div class="map-layout">
           <div class="map-stage">
-            <div id="tainan-map" role="application" aria-label="可縮放與點選的臺南市行政區地圖"></div>
-            <div id="map-status" class="map-status" role="status">正在載入區界向量…</div>
+            <div id="tainan-map" role="application" aria-label="可縮放、拖曳與點選道路分界的臺南大區互動地圖"></div>
+            <div id="map-status" class="map-status" role="status">正在載入道路與行政區向量…</div>
             <button class="map-reset" id="map-reset" type="button" aria-label="回到台南全市">⌖<span>全市</span></button>
           </div>
           <aside class="map-sidebar">
             <div class="map-total-card">
               <span>目前名單</span>
               <strong><span id="shown-total">—</span><small>／110 位</small></strong>
-              <p id="district-detail" class="selection-detail" aria-live="polite">下方點選大區可看大區總數；點選地圖行政區可看該處關懷據點人數。</p>
+              <p id="district-detail" class="selection-detail" aria-live="polite">點選右側大區或地圖道路，可查看人數與分界資料。</p>
             </div>
-            <div class="map-list-heading"><strong>照顧區人數</strong><span>按召會大區彙總</span></div>
+            <div class="map-list-heading"><strong>大區名冊人數</strong><span>點選查看實際道路分界</span></div>
             <div id="district-list" class="district-list" aria-live="polite"></div>
             <p class="privacy-note"><span aria-hidden="true">◈</span> 只呈現彙總數字，不標示個人住址或位置。</p>
           </aside>
         </div>
-        <div class="map-footer"><span id="map-selection">點選地圖上的行政區查看關懷據點名冊人數；拖曳或縮放瀏覽。</span><span>區界向量來源：<a href="https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0" target="_blank" rel="noopener">臺南市區界圖圖徵服務</a> · <a href="https://data.gov.tw/dataset/98813" target="_blank" rel="noopener">市府區域圖資料集</a></span></div>
+        <div class="map-footer"><span id="map-selection">點選大區或彩色道路查看分界與人數；拖曳或縮放瀏覽。</span><span>道路向量：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · 道路資料摘錄：<a href="https://download.geofabrik.de/asia/taiwan.html" target="_blank" rel="noopener">Geofabrik Taiwan</a> · 行政區界：<a href="https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0" target="_blank" rel="noopener">臺南市區界向量</a></span></div>
       </section>
 
       <div class="content-grid single-column">
@@ -122,8 +122,8 @@
       </footer>
     </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="data.js?v=20261118-area-counts"></script>
-    <script src="app.js?v=20261118-area-counts"></script>
-    <script src="map.js?v=20261118-area-counts"></script>
+    <script src="data.js?v=20261120-road-map"></script>
+    <script src="app.js?v=20261120-road-map"></script>
+    <script src="map.js?v=20261120-road-map"></script>
   </body>
 </html>
