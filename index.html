@@ -58,14 +58,14 @@
             <h2>得少概況地圖</h2>
           </div>
           <div class="map-actions">
-            <span class="map-source-pill"><span class="source-dot"></span>大區向量界線</span>
+            <span class="map-source-pill"><span class="source-dot"></span>臺南市行政區界線</span>
             <a class="official-map-link" href="https://landmap.tainan.gov.tw/gis/" target="_blank" rel="noopener">官方地籍圖台 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
-        <p class="section-note map-note">點選大區範圍或右側名單查看名冊人數；地圖僅呈現大區界線，不顯示道路名稱、地形或地貌。</p>
+        <p class="section-note map-note">地圖只保留臺南市現有行政區界線。點選行政區可查看所屬大區與人數；道路線已移除。</p>
         <div class="map-layout">
           <div class="map-stage">
-            <div id="tainan-map" role="application" aria-label="可縮放、拖曳與點選大區範圍的臺南互動地圖"></div>
+            <div id="tainan-map" role="application" aria-label="可縮放、拖曳與點選行政區的臺南互動地圖"></div>
             <div id="map-status" class="map-status" role="status">正在載入大區向量…</div>
             <button class="map-reset" id="map-reset" type="button" aria-label="回到台南全市">⌖<span>全市</span></button>
           </div>
@@ -80,7 +80,7 @@
             <p class="privacy-note"><span aria-hidden="true">◈</span> 只呈現彙總數字，不標示個人住址或位置。</p>
           </aside>
         </div>
-        <div class="map-footer"><span id="map-selection">點選大區範圍查看人數；拖曳或縮放瀏覽。</span><span>道路界線參照：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · 行政區界：<a href="https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0" target="_blank" rel="noopener">臺南市區界向量</a></span></div>
+        <div class="map-footer"><span id="map-selection">點選行政區查看所屬大區；拖曳或縮放瀏覽。</span><span>行政區界線來源：<a href="https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0" target="_blank" rel="noopener">臺南市區界向量</a></span></div>
       </section>
 
       <div class="content-grid single-column">
@@ -123,7 +123,7 @@
     </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="data.js?v=20261120-zones-v4"></script>
-    <script src="app.js?v=20261120-road-map"></script>
-    <script src="map.js?v=20261120-zones-v6"></script>
+    <script src="app.js?v=20261120-admin-boundaries"></script>
+    <script src="map.js?v=20261120-admin-boundaries-v1"></script>
   </body>
 </html>
