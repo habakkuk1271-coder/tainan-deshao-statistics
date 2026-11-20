@@ -184,3 +184,27 @@ h1 span { color: var(--mint); }
   .district-list { grid-template-columns: 1fr; }
   .district-row { grid-template-columns: 74px 1fr 48px; }
 }
+
+/* Large, readable road-boundary map */
+.page-shell { width: min(1500px, calc(100% - 36px)); }
+.map-panel { padding: clamp(16px, 2vw, 26px); }
+.map-layout { grid-template-columns: minmax(0, 1fr) 330px; min-height: max(720px, 78vh); }
+.map-stage, #tainan-map { min-height: max(720px, 78vh); }
+.map-sidebar { max-height: max(720px, 78vh); }
+.district-list { max-height: calc(78vh - 250px); }
+.road-group-list { margin-top: 7px; color: #c3d5ca; font-size: 11px; font-weight: 500; }
+.road-tooltip { border: 0; border-radius: 6px; color: #20342d; background: rgba(247,248,240,.95); font-size: 11px; box-shadow: 0 2px 10px rgba(0,0,0,.14); }
+.map-footer { flex-wrap: wrap; font-size: 10px; }
+.map-footer > span:last-child { max-width: 65%; }
+
+@media (max-width: 900px) {
+  .map-layout { grid-template-columns: 1fr; min-height: unset; }
+  .map-stage, #tainan-map { min-height: 68vh; }
+  .map-sidebar { max-height: unset; border-top: 1px solid rgba(24,45,35,.09); border-left: 0; }
+  .district-list { max-height: 450px; }
+  .map-footer > span:last-child { max-width: none; }
+}
+@media (max-width: 520px) {
+  .page-shell { width: calc(100% - 24px); }
+  .map-stage, #tainan-map { min-height: 62vh; }
+}
