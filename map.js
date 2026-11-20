@@ -146,7 +146,7 @@
 
   const districtQuery = new URLSearchParams({ where: "1=1", outFields: "TOWNID,TOWNCODE,TOWNNAME,TOWNENG", returnGeometry: "true", outSR: "4326", f: "geojson" });
   const districtSource = "https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E8%87%BA%E5%8D%97%E5%B8%82%E5%8D%80%E7%95%8C%E5%9C%96/FeatureServer/0/query?" + districtQuery.toString();
-  const villageQuery = new URLSearchParams({ where: "COUNTYNAME='臺南市'", outFields: "COUNTYNAME,TOWNNAME,VILLNAME,VILLCODE", returnGeometry: "true", outSR: "4326", f: "geojson" });
+  const villageQuery = new URLSearchParams({ where: "COUNTYNAME='臺南市' AND TOWNNAME IN ('東區','永康區')", outFields: "COUNTYNAME,TOWNNAME,VILLNAME,VILLCODE", returnGeometry: "true", outSR: "4326", f: "geojson" });
   const villageSource = "https://services3.arcgis.com/pKves1c0n6gyoHMM/ArcGIS/rest/services/%E6%9D%91%E9%87%8C%E7%95%8C/FeatureServer/0/query?" + villageQuery.toString();
 
   Promise.all([
