@@ -7,7 +7,7 @@
     <meta name="description" content="台南得少統計互動儀表板" />
     <title>台南得少統計</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <link rel="stylesheet" href="styles.css?v=20261120-zones-v4" />
+    <link rel="stylesheet" href="styles.css?v=20261120-count-fix-v1" />
   </head>
   <body>
     <header class="topbar">
@@ -43,6 +43,11 @@
           <span class="kpi-label">國高中階段</span>
           <div class="kpi-value"><strong id="secondary-total">—</strong><span>位</span></div>
           <span class="kpi-foot">國中與高中年級</span>
+        </article>
+        <article class="kpi-card">
+          <span class="kpi-label">大專階段</span>
+          <div class="kpi-value"><strong id="college-total">—</strong><span>位</span></div>
+          <span class="kpi-foot">專一至專五</span>
         </article>
         <article class="kpi-card">
           <span class="kpi-label">已受浸</span>
@@ -123,7 +128,7 @@
     </main>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="data.js?v=20261120-village-zones-v3"></script>
-    <script src="app.js?v=20261120-village-zones-v3"></script>
+    <script src="app.js?v=20261120-count-fix-v1"></script>
     <script src="map.js?v=20261120-village-zones-v3"></script>
   </body>
 </html>
