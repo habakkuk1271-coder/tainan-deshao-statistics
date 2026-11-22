@@ -53,7 +53,7 @@
       const districts = data.namesByGroupDistrict?.[id];
       const statsLine = stats ? `<span class="selected-group-meta">${stats.villages} 里・${Number(stats.households).toLocaleString("zh-TW")} 戶</span>` : "";
       const namesList = districts
-        ? `<div class="selected-name-area"><span class="selected-name-label">依行政區分類</span><div class="selected-district-groups">${districts.map((district) => `<section class="selected-district-group"><h4 class="selected-district-title"><span>${escapeHtml(district.district)}區</span><small>${district.names.length} 位</small></h4>${district.names.length ? `<ul class="selected-name-list">${district.names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul>` : ""}</section>`).join("")}</div></div>`
+        ? `<div class="selected-name-area"><div class="selected-district-groups">${districts.map((district) => `<section class="selected-district-group"><h4 class="selected-district-title"><span>${escapeHtml(district.district)}區</span><small>${district.names.length} 位</small></h4>${district.names.length ? `<ul class="selected-name-list">${district.names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul>` : ""}</section>`).join("")}</div></div>`
         : names.length
           ? `<div class="selected-name-area"><span class="selected-name-label">得少姓名（${names.length} 位）</span><ul class="selected-name-list">${names.map((name) => `<li>${escapeHtml(name)}</li>`).join("")}</ul></div>`
         : `<span class="selected-group-empty">目前名單無得少</span>`;
