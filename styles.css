@@ -162,11 +162,15 @@ h1 span { color: var(--mint); }
 .selected-groups::-webkit-scrollbar-track { border-radius: 8px; background: #e0e8df; }
 .selected-groups::-webkit-scrollbar-thumb { border: 2px solid #e0e8df; border-radius: 8px; background: #789985; }
 .selected-group { padding: 8px 9px; border: 1px solid rgba(61,123,85,.16); border-radius: 9px; background: rgba(255,255,255,.42); }
-.selected-group-title { display: flex; justify-content: space-between; gap: 8px; margin: 0; color: #2f6c51; font-size: 14px; font-weight: 700; }
+.selected-group-title { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; gap: 8px; margin: 0; padding: 3px 0; color: #2f6c51; background: #f3f2e8; font-size: 14px; font-weight: 700; }
 .selected-group-title small { color: #60776a; font-size: 13px; font-weight: 600; white-space: nowrap; }
 .selected-group-meta { display: block; margin-top: 4px; color: #61756a; font-size: 13px; }
 .selected-name-area { margin-top: 7px; }
 .selected-name-label { color: #455e4f; font-size: 14px; font-weight: 700; }
+.selected-district-groups { display: grid; gap: 8px; margin-top: 8px; }
+.selected-district-group { padding-top: 4px; border-top: 1px solid rgba(61,123,85,.14); }
+.selected-district-title { position: sticky; top: 30px; z-index: 1; display: flex; justify-content: space-between; gap: 8px; margin: 0; padding: 3px 0; color: #354f40; background: #f3f2e8; font-size: 14px; font-weight: 700; }
+.selected-district-title small { color: #52685b; font-size: 13px; font-weight: 700; white-space: nowrap; }
 .selected-name-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; margin: 9px 0 0; padding: 0; color: #20372b; font-size: 16px; line-height: 1.7; list-style: none; }
 .selected-name-list li { min-width: 0; overflow-wrap: anywhere; }
 .selected-group-empty { display: block; margin-top: 5px; color: #78867e; font-size: 10px; }
